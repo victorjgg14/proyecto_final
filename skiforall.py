@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.express as px
 
 
-# Cargar datos
 df = pd.read_csv('data_infonieve.csv')
 df = df.drop('id', axis=1)
 
@@ -14,22 +13,30 @@ st.sidebar.image(logo_infonieve, caption='Logo infonieve', width=125)
 
 # selectbox para cambiar de pagina
 analisis_seleccionado = st.sidebar.selectbox('Seleccione análisis:',
-                                             ['Inicio', 'Información de Estación', 'Comparador de precios', 'Precio por Kilómetro', 'Servicios'])
+                                             ['Inicio', 'Info estaciones', 'Comparador de precios', 'Precio por km', 'Servicios'])
 
 
 # Dependiendo del análisis seleccionado, mostrar el contenido correspondiente
 
 if analisis_seleccionado == 'Inicio':
     
-    # Título de la aplicación
+  
     st.title('SkiForAll')
-    st.write('Aquí encontrarás información detallada de las estaciones de la península.')
+   
+    st.write('''
+             Aquí os dejo mi proyecto final de curso.
+             Un apasionado del snowboard y también del mundo tech que os reune un poco de información relevante para los
+             que os pique la curiosidad o tengáis duda con la estación a la que iréis esta temporada.
+             
+             Aprovecho para dar las gracias a infonieve por la aportación de su API sin la cual este proyecto no estaría hoy aquí.
+             ''')
     
+    st.markdown('---')
     st.image('imagen_inicio_st.png')
     
 
 
-elif analisis_seleccionado == 'Información de Estación':
+elif analisis_seleccionado == 'Info estaciones':
     
     estacion = st.selectbox('Estación', sorted(df.name.unique()))
     estacion_data = df[df['name'] == estacion].iloc[0]
@@ -79,7 +86,7 @@ elif analisis_seleccionado == 'Comparador de precios':
     st.plotly_chart(fig, use_container_width=True)
 
 
-elif analisis_seleccionado == 'Precio por Kilómetro':
+elif analisis_seleccionado == 'Precio por km':
     
     st.subheader('Precio por Kilómetro')
     df['precio_por_km'] = df['forfait'] / df['km_total']
