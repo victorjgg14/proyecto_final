@@ -16,13 +16,16 @@ df = df.drop('id', axis=1)
 logo_infonieve = 'logo_infonieve.jpg'
 
 with st.sidebar:
+    
     st.image(logo_infonieve, caption='Logo infonieve', width=125) 
+    
     estacion = st.selectbox('Estación',sorted(df.name.unique()))
     
     
 estacion_data = df[df['name'] == estacion].iloc[0]
 
 # tarjetas de debajo del titulo
+
 col1, col2, col3 = st.columns(3)
 
 col1.metric("Kms de la estación", estacion_data['km_total'])
@@ -62,5 +65,34 @@ if estacion_data.esqui_de_fondo == 1:
     col4.metric('Esquí de fondo', 'Sí')
 else:
     col4.metric('Esquí de fondo', 'No')
-    
+  
+ 
+st.markdown('---')
+
+
+st.subheader('Comparador de precios')
+
+estaciones_forfait = st.multiselect('Seleccione estaciones para comparar:', df.name.unique())
+
+# Filtrar el DataFrame según las estaciones seleccionadas
+df_filtrado = df[df.name.isin(estaciones_forfait)]
+
+# barchart
+fig = px.bar(df_filtrado, x='name', y='forfait', title='Comparación de Precios de Forfaits',
+             labels={'name': 'Estación', 'forfait': 'Precio del Forfait'})
+
+st.plotly_chart(fig, use_container_width=True)
+
+
+st.markdown('---')
+
+st.subheader('Precio por Kilómetro')
+
+df['precio_por_km'] = df['forfait'] / df['km_total']
+
+fig_2 = px.line(df, x='name', y='precio_por_km')
+
+st.plotly_chart(fig_2, use_container_width=True)
+
+
 
