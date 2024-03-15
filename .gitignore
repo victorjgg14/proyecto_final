@@ -15,11 +15,12 @@ contraseñas.txt
 pass_.py
 password.txt
 password.py
-.sucio.ipynb
-.limpio.py
+sucio.ipynb
+limpio.py
 
 .env
 *.hdf5
 *.h5
 *.parquet
 
+logo_infonieve.jpg
