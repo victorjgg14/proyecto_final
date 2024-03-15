@@ -1,71 +1,66 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
 
-# Cargar datos
+
+st.title('SkiForAll')
+
+st.write('aquí encontrarás información detallada de las estaciones de la península.')
+
+st.markdown('---')
+
 df = pd.read_csv('data_infonieve.csv')
+
 df = df.drop('id', axis=1)
 
-# Funciones de análisis
-def porcentaje_pistas_por_estacion(nombre_estacion):
-    # Cálculos ...
-    return verde, azul, roja, negra
+logo_infonieve = 'logo_infonieve.jpg'
 
-def main_analisis():
-    st.title("Desglose de pistas por estación")
-    nombre_estacion = st.selectbox("Seleccione una estación:", df['name'].unique())
-    verde, azul, roja, negra = porcentaje_pistas_por_estacion(nombre_estacion)
-    fig, ax = plt.subplots()
-    ax.pie([verde, azul, roja, negra], labels=['Verde', 'Azul', 'Roja', 'Negra'], autopct='%1.1f%%', startangle=90)
-    ax.axis('equal') 
-    st.pyplot(fig)
-
-# Funciones de inicio
-def main_inicio():
-    st.title('Bienvenido a SkiForAll')
-    st.text('Aquí encontrarás información detallada de las estaciones de esquí de la península.')
-    st.header('df infonieve')
-    st.text('datos reacabados desde la api de infonieve')
-    st.write(df)
+with st.sidebar:
+    st.image(logo_infonieve, caption='Logo infonieve', width=125) 
+    estacion = st.selectbox('Estación',sorted(df.name.unique()))
     
-    st.header('Servicios estación')
-    snowpark = st.checkbox('snowpark')
-    raquetas = st.checkbox('raquetas')
-    trineos = st.checkbox('trineos')
-    esqui_de_fondo = st.checkbox('esqui de fondo')
+    
+estacion_data = df[df['name'] == estacion].iloc[0]
 
-    resultado = None
+# tarjetas de debajo del titulo
+col1, col2, col3 = st.columns(3)
 
-    if snowpark:
-        resultado = df.loc[df['snowpark'] == 1, 'name']
+col1.metric("Kms de la estación", estacion_data['km_total'])
+col2.metric("Telesillas de la estación", estacion_data['lifts_total'])
+col3.metric("Precio forfait", estacion_data['forfait'])
 
-    if raquetas:
-        resultado = df.loc[df['raquetas'] == 1, 'name']
+# grafico colores pistas
 
-    if trineos:
-        resultado = df.loc[df['trineos'] == 1, 'name']
-   
-    if esqui_de_fondo:
-        resultado = df.loc[df['esqui_de_fondo'] == 1, 'name']
+fig = px.pie(estacion_data, names=['pistas verdes', 'pistas azules', 'pistas rojas', 'pistas negras'], 
+             title='Niveles de pistas',
+             values= [estacion_data['green_runs_total'], estacion_data['blue_runs_total'],
+                      estacion_data['red_runs_total'], estacion_data['black_runs_total']])
 
-    st.write('Resultado:', resultado)
+st.plotly_chart(fig, use_container_width=True)
 
-def buscar_estacion():
-    buscar = st.text_input("Buscar estación")
-    filtrado = df[df['name'].str.contains(buscar, case=False)]
-    return filtrado
 
-# Main
-def main():
-    st.sidebar.title("Menú")
-    menu_option = st.sidebar.selectbox("Seleccionar opción", ["Inicio", "Análisis"])
+# tarjetas indicativas servicios
 
-    if menu_option == "Inicio":
-        main_inicio()
-    elif menu_option == "Análisis":
-        main_analisis()
+col1, col2, col3, col4 = st.columns(4)
 
-if __name__ == "__main__":
-    main()
+if estacion_data.snowpark == 1:
+    col1.metric('Snowpark', 'Sí')
+else:
+    col1.metric('Snowpark', 'No')
+    
+if estacion_data.raquetas == 1:
+    col2.metric('Raquetas', 'Sí')
+else:
+    col2.metric('Raquetas', 'No')
+    
+if estacion_data.trineos == 1:
+    col3.metric('Trineos', 'Sí')
+else:
+    col3.metric('Trineos', 'No')
+    
+if estacion_data.esqui_de_fondo == 1:
+    col4.metric('Esquí de fondo', 'Sí')
+else:
+    col4.metric('Esquí de fondo', 'No')
+    
+
