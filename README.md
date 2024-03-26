@@ -10,6 +10,9 @@ Herramientas:
 - Streamlit
 
 ![IMG_1069](https://github.com/victorjgg14/proyecto_final/assets/156781013/5b2ddffd-ded1-4643-9a9e-bc54b0e41b8a)
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 7865e551643cd4cf556b9228b738d6bbff2f719b
