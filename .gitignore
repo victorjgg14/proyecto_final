@@ -17,6 +17,8 @@ password.txt
 password.py
 sucio.ipynb
 limpio.py
+prueba.py
+
 
 .env
 *.hdf5
